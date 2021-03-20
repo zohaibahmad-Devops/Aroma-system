@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Orders List {% endblock %}
+{% block link-orders %}active{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    {% url 'order-list' as orderurl %}
+                    <h1>
+
+                        {% if page %}
+                            <a href="{{ orderurl }}">Orders</a> &nbsp;&gt;
+                            {% if page == 'w' %}
+                                Waiting
+                            {% elif page == 'r' %}
+                                Ready
+                            {% elif page == 's' %}
+                                Served
+                            {% elif page == 'c' %}
+                                Cancelled
+                            {% elif page == 'cd' %}
+                                Completed
+                            {% elif page == 'ot' %}
+                                Today
+                            {% endif %}
+                        {% else %}
+                            Orders
+                        {% endif %}
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+                <div class="col-xs-4">
+                    <a href="{% url 'menu' %}" class="pull-right btn btn-primary" style="margin: 40px 40px">
+                        <i class="fa fa-plus"></i> Add New Order
+                    </a>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+
+        {% if object_list %}
+            <div class="row">
+                {% for order in object_list %}
+                    <div class="col-xs-3">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h5 style="display: inline-block"><b>Order # {{ order.id }}</b></h5>
+
+                                        {% if not order.is_completed %}
+                                            <div class="box-tools pull-right" style="margin-top: 8px;">
+                                                <a href="{% url 'order-edit' order.id %}" class="btn btn-box-tool">
+                                                    <i class="fa fa-pencil" style="font-size: 18px;"></i>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if order.is_today %}
+                                            <div class="box-tools pull-right" style="margin-top: 8px;">
+                                                <span class="label label-success">Today Order</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- ./row -->
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="text-muted">{{ order.created_at.date }}, {{ order.created_at.time }}</p>
+                                        <h3 style="margin-top: -5px;">Table Number {{ order.order_table.number }}</h3>
+                                        <h3 style="margin-top: 5px;">
+                                            <small>
+                                                Status:
+                                                {% if order.is_waiting %}
+                                                    <span class="text-orange"
+                                                          id="order-status"><b>Waiting</b></span>
+                                                {% elif order.is_ready %}
+                                                    <span class="text-blue"
+                                                          id="order-status"><b>Ready</b></span>
+                                                {% elif order.is_served %}
+                                                    <span class="text-green"
+                                                          id="order-status"><b>Served</b></span>
+                                                {% elif order.is_completed %}
+                                                    <span class="text-success"
+                                                          id="order-status"><b>Completed</b></span>
+                                                {% elif order.is_cancelled %}
+                                                    <span class="text-danger" id="order-status"><b>Cancelled</b></span>
+                                                {% endif %}
+                                            </small>
+                                        </h3>
+                                        {% if order.waiter %}
+                                            <h3 style="margin-top: 5px;">
+                                                <small>
+                                                    Order Of:
+                                                    <span id="order-status"><b>{{ order.waiter }}</b></span>
+                                                </small>
+                                            </h3>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- ./row -->
+
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <h5 style="margin: 2px 0;"><b>Order Items:</b></h5>
+
+                                <ul class="nav nav-pills nav-stacked no-padding">
+                                    {% for i in order.orderitems_set.all %}
+                                        <li class="order-item" style="padding: 5px 5px;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td><img src="{{ i.item.category.image.url }}" alt="" width="15px">
+                                                    </td>
+                                                    <td>{{ i.item.name }}</td>
+                                                    <td><span class="text-danger">Rs. {{ i.item.price }}</span></td>
+                                                    <td><span
+                                                            class="badge bg-blue pull-right">{{ i.item_quantity }}</span>
+                                                    </td>
+                                                </tr>
+                                                {% if i.item_extra %}
+                                                    {% ifnotequal i.item_extra '' %}
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                {{ i.item_extra }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endifnotequal %}
+                                                {% endif %}
+                                            </table>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <ul class="nav nav-pills nav-stacked">
+
+                                    {% ifnotequal order.discount 0 %}
+                                        <li class="order-item" style="padding: 5px;">
+                                            <p class="pull-left"><b>Total Bill</b></p>
+                                            <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                                Rs. {{ order.total_bill }}</h3>
+                                            <div class="clearfix"></div>
+                                        </li>
+
+                                        <li class="order-item">
+                                            <b>Discount</b>
+                                            <span class="pull-right text-danger">{{ order.discount }}%</span>
+                                        </li>
+                                    {% endifnotequal %}
+
+                                    {% if order.is_completed %}
+                                        {% ifnotequal order.service_charges 0 %}
+                                            <li class="order-item">
+                                                <!--<b>Service Charges</b>-->
+                                                <b>GST</b>
+                                                <span class="pull-right text-danger">{{ order.service_charges }}%</span>
+                                            </li>
+                                        {% endifnotequal %}
+
+
+                                        <li class="order-item">
+                                            <b>Custom Bill</b>
+                                            <span class="pull-right text-danger">Rs. {{ order.custom_amount }}</span>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="order-item" style="padding: 5px;">
+                                        <div class="clearfix"></div>
+                                        <p class="pull-left"><b>Grand Total</b></p>
+                                        <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                            Rs. <span class="grand_total">{{ order.get_grand_total }}</span></h3>
+                                        <div class="clearfix"></div>
+                                    </li>
+
+
+                                    <li class="order-item" style="padding: 5px;">
+                                        <p class="pull-left text-muted">
+                                            <small><b>Calculated</b></small>
+                                        </p>
+                                        <h4 class="pull-right text-muted" style="display: inline-block; margin: 0;">
+                                            <small>Rs. <span class="calculated">{{ order.get_grand_total }}</span>
+                                            </small>
+                                        </h4>
+                                    </li>
+
+                                </ul>
+
+
+                                {% if not order.is_completed %}
+                                    <hr style="margin: 5px 0;">
+                                    {% if order.is_served %}
+                                        <p>Complete Order</p>
+                                    {% else %}
+                                        <p>Set Order Status</p>
+                                    {% endif %}
+                                    <div class="row">
+                                        {% if order.is_waiting %}
+                                            <div class="col-xs-4">
+                                                <a href="{% url 'order-ready' order.id %}"
+                                                   class="btn btn-info">Ready</a>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <a href="{% url 'order-served' order.id %}" class="btn btn-success">Served</a>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <a href="{% url 'order-cancel' order.id %}" class="btn btn-danger">Cancel</a>
+                                            </div>
+
+                                        {% elif order.is_ready %}
+                                            <div class="col-xs-3">
+                                                <a href="{% url 'order-served' order.id %}" class="btn btn-success">Served</a>
+                                            </div>
+                                        {% elif order.is_served %}
+
+                                            <form action="{% url 'order-completed' order.id %}" method="post">
+                                                {% csrf_token %}
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+
+                                                            <!-- Service Charges Added -->
+                                                            <div class="form-group">
+                                                                <label for="" class="text-muted">GST
+                                                                    (%)</label>
+                                                                <input type="number" class="form-control service_charges"
+                                                                       name="service_charges"
+                                                                       placeholder="Service Charges (%)" min=0
+                                                                       required>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="" class="text-muted">Discount (%)</label>
+                                                                <input type="number" class="form-control discount"
+                                                                       name="discount"
+                                                                       value="{{ order.discount }}"
+                                                                       placeholder="Discount (%)">
+
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="" class="text-muted">Custom Amount
+                                                                    (Rs)</label>
+                                                                <input type="number" class="form-control"
+                                                                       name="custom_amount"
+                                                                       placeholder="Rs. " min=0
+                                                                       required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="checkbox">
+                                                                <label for="id_print">
+                                                                    <input type="checkbox" name="print" id="id_print" checked>
+                                                                    Print Bill
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <input type="submit" value="Checkout"
+                                                                   class="btn btn-success btn-block">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- /.footer -->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+
+                    {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+                        </div>
+                        <div class="row">
+                    {% endif %}
+
+                {% endfor %}
+                </div>
+
+        {% else %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <h3 class="text-gray text-center">No Order Found</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </section>
+    <!-- /.content -->
+
+    <script src="{% static 'app/bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script>
+        var serviceCharges = 0;
+        var discount = 0;
+        var grandTotal = 0
+        var serviceChargesElement = $('.service_charges')
+        var discountElement = $('.discount')
+
+        serviceChargesElement.on('input', function (e) {
+            var gt_ele = $(this).parent().parent().parent().parent().parent().parent().parent().find('.grand_total')
+            var ctd_ele = $(this).parent().parent().parent().parent().parent().parent().parent().find('.calculated')
+            var grandTotal = gt_ele.text()
+            grandTotal = parseFloat(grandTotal)
+            serviceCharges = (grandTotal * ($(this).val() / 100));
+            ctd_ele.text((grandTotal + serviceCharges - discount).toFixed(2))
+        });
+
+        discountElement.on('input', function (e) {
+            var gt_ele = $(this).parent().parent().parent().parent().parent().parent().parent().find('.grand_total')
+            var ctd_ele = $(this).parent().parent().parent().parent().parent().parent().parent().find('.calculated')
+            var grandTotal = gt_ele.text()
+            grandTotal = parseFloat(grandTotal)
+            discount = (grandTotal * ($(this).val() / 100));
+            ctd_ele.text((grandTotal + serviceCharges - discount).toFixed(2))
+        });
+    </script>
+
+
+{% endblock %}

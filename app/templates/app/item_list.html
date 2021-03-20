@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Item List {% endblock %}
+{% block link-items %}active{% endblock %}
+{% block link-items-details %}active{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        Items
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+                <div class="col-xs-4">
+                    <a href="{% url 'item-new' %}" class="pull-right btn btn-primary" style="margin: 40px 40px">
+                        <i class="fa fa-plus"></i> Add New Items
+                    </a>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        {% if messages %}
+            <div class="alert alert-success alert-dismissible" id="fadeable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                </button>
+                <h4><i class="icon fa fa-check"></i> Success!</h4>
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if categories %}
+            {% if object_list %}
+                <div class="row">
+                    {% for item in object_list %}
+                        <div class="col-xs-3">
+                            <div class="box box-info">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><b>{{ item.name }}</b></h3>
+
+                                    <div class="box-tools pull-right">
+                                        <a href="{% url 'item-edit' item.id %}" class="btn btn-box-tool">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'item-delete' item.id %}" class="btn btn-box-tool">
+                                            <i class="fa fa-times"></i></a>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {% if item.image %}
+                                                <img src="{{ item.image.url }}" alt="" class="img-responsive">
+                                            {% elif item.category.image %}
+                                                <img src="{{ item.category.image.url }}" alt="" class="img-responsive"
+                                                     style="margin: 0 auto; width: 120px;">
+                                            {% else %}
+                                                <div>
+                                                   <h3 class="text-muted text-center"> No Image Available</h3>
+                                                </div>
+                                                {#                                            <img src="logo_main.png" alt="" class="img-responsive">#}
+                                            {% endif %}
+
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                    {% ifequal item.id most_selling %}
+                                        <p><span class="label label-success">Most Selling</span></p>
+                                    {% endifequal %}
+
+                                    {% if item.is_never_sold %}
+                                        <p><span class="label label-danger">Never Sold</span></p>
+                                    {% endif %}
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li>
+                                            <b>Description</b>
+                                            <p>{{ item.description }}</p>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <p><b>Category</b></p>
+                                                    <p>{{ item.category }}</p>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                <span class="pull-right" style="margin-top: 15px;">
+                                                    {% if item.category.image %}
+                                                    <img src="{{ item.category.image.url }}" alt="" class="img-sm">
+                                                    {% endif %}
+                                                </span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+
+
+                                        </li>
+                                        <li><b>Price</b><span
+                                                class="pull-right text-red"><b>Rs. {{ item.price }}</b></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- /.footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+
+                        {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+                            </div>
+                            <div class="row">
+                        {% endif %}
+
+                    {% endfor %}
+                    </div>
+
+            {% else %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <h3 class="text-gray text-center">No Item Found</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="text-center">
+                                <h3 class="text-gray text-center">No Category Found</h3>
+                                <a href="{% url 'item-category-new' %}" class="btn btn-info">Add Item Category</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

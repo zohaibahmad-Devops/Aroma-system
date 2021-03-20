@@ -1,0 +1,109 @@
+html, body {
+    height: 100vh !important;
+    overflow: hidden;
+}
+
+.content {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+.content-wrapper {
+    /*background: white;*/
+    /*background-color: #fcfcfc;*/
+    margin-left: 180px;
+}
+
+.no-image-available {
+    text-align: center;
+    padding: 10px 5px;
+    color: #cccccc;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.main-sidebar {
+    top: 55px;
+    min-height: 500px;
+    width: 180px;
+}
+
+.main-header .logo {
+    height: 105px;
+    background-color: transparent;
+    width: 180px;
+}
+
+.skin-blue .main-header .logo {
+    height: 105px;
+    background-color: transparent;
+}
+
+[aria-controls~="data-table"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.info-box .info-box-icon {
+    display: flex; !important;
+    justify-content: center;
+    align-items: center;
+}
+
+/************** CUSTOM CLASSES *****************/
+.box-clickable {
+    cursor: pointer;
+    transition: all .4s;
+}
+
+.box-clickable:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.order-box {
+    position: fixed;
+    right: 30px;
+    bottom: 10px;
+    width: 350px;
+    height: 95vh;
+}
+
+.order-body {
+    height: 75vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.no-order-container {
+    height: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-order {
+    height: 250px;
+    width: 250px;
+    border: 1px dashed #cccccc;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #cccccc;
+}
+
+.order-item {
+    padding: 15px 10px;
+}
+
+.item-name {
+    display: inline-block;
+    width: 115px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}

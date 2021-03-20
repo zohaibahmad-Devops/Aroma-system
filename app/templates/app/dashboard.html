@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %} Dashboard {% endblock %}
+{% block link-dashboard %}active{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        Dashboard
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+            {% if not user.is_inventory_manager %}
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                    <span class="info-box-icon bg-aqua"
+                          style="display: flex; justify-content: center; align-most_selling_items: center"><i
+                            class="fa fa-tasks"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Today Orders</span>
+                            <span class="info-box-number">{{ today_orders|intcomma }}
+                            <small></small></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+            {% endif %}
+
+            {% if user.is_superuser or user.is_manager %}
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                    <span class="info-box-icon bg-teal"
+                          style="display: flex; justify-content: center; align-most_selling_items: center">
+                        <i class="fa fa-dollar"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Today Earnings</span>
+                            <span class="info-box-number">Rs. {{ today_earning|intcomma }}
+                            <small></small></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                    <span class="info-box-icon bg-red"
+                          style="display: flex; justify-content: center; align-most_selling_items: center">
+                        <i class="fa fa-dollar"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Today Spent</span>
+                            <span class="info-box-number">Rs. {{ today_spent|intcomma }}
+                            <small></small></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+
+                <!-- fix for small devices only -->
+                <div class="clearfix visible-sm-block"></div>
+
+                </div>
+                <!-- /.row -->
+
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-green" style="overflow: hidden">
+                        <div class="inner">
+                            <h3>Rs. {{ today_profit|intcomma }}</h3>
+
+                            <p>Today Profit</p>
+                        </div>
+                        <div class="icon" style="top: 10px;">
+                            <i class="fa fa-angle-up"></i>
+                        </div>
+                        {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-red" style="overflow: hidden">
+                        <div class="inner">
+                            <h3>Rs. {{ today_loss|intcomma }}</h3>
+
+                            <p>Today Loss</p>
+                        </div>
+                        <div class="icon" style="top: 10px;">
+                            <i class="fa fa-angle-down"></i>
+                        </div>
+                        {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                    </div>
+                </div>
+                <!-- ./col -->
+            {% endif %}
+
+        {% if not user.is_staff %}
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow" style="overflow: hidden">
+                    <div class="inner">
+                        <h3>Rs. {{ today_inventory|intcomma }}</h3>
+
+                        <p>Inventory Expense</p>
+                    </div>
+                    <div class="icon" style="top: 10px;">
+                        <i class="fa fa-angle-down"></i>
+                    </div>
+                    {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                </div>
+            </div>
+            <!-- ./col -->
+        {% endif %}
+
+            </div>
+        <!-- /.row -->
+
+    {% if not user.is_inventory_manager %}
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Most Selling Item</h3>
+                    </div>
+
+                    <div class="box-body">
+                    {% with most_popular_item as popular_item %}
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+{#                                {{ most_popular_item }}#}
+                                <h3 class="box-title"><b>{{ popular_item.name }}</b></h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {% if popular_item.image %}
+                                            <img src="{{ popular_item.image.url }}" alt="" class="img-responsive">
+                                        {% elif popular_item.category.image %}
+                                            <img src="{{ popular_item.category.image.url }}" alt=""
+                                                 class="img-responsive"
+                                                 style="margin: 0 auto; width: 120px;">
+                                        {% else %}
+                                            <div>
+                                                No Image Available
+                                            </div>
+                                            {#                                            <img src="logo_main.png" alt="" class="img-responsive">#}
+                                        {% endif %}
+
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li>
+                                        <b>Description</b>
+                                        <p>{{ popular_item.description }}</p>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <p><b>Category</b></p>
+                                                <p>{{ popular_item.category }}</p>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <span class="pull-right" style="margin-top: 15px;"><img
+                                                        src="{{ popular_item.category.image.url }}" alt=""
+                                                        class="img-sm"></span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+
+
+                                    </li>
+                                    <li><b>Price</b><span
+                                            class="pull-right text-red"><b>Rs. {{ popular_item.price }}</b></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- /.footer -->
+                        </div>
+                        <!-- /.box -->
+                    {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <!-- ./col-xs-3 -->
+
+            <div class="col-xs-3">
+                <div class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Most Favorite Table</h3>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><b>{{ most_favorite_table }}</b></h3>
+                            </div>
+                            <!-- /.box-header -->
+
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </div>
+            <!-- ./col-xs-3 -->
+        </div>
+    {% endif %}
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

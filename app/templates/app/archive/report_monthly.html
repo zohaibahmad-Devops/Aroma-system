@@ -1,0 +1,559 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %} Monthly Report{% endblock %}
+{% block link-reports %}active{% endblock %}
+{% block link-reports-monthly %}active{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            {% now 'F, Y' as month %}
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        Report for <b>{{ month }}</b>
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <div class="box box-solid">
+            <div class="box-body">
+                <h3>Sales</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>{{ peak_hour }}</h3>
+
+                                <p>Peak Hour</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-lime" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>Rs. {{ avg_sales|floatformat:"2"|intcomma }}</h3>
+
+                                <p>Monthly Average Sales</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-green" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>Rs. {{ total_sale|intcomma }}</h3>
+
+                                <p>Monthly Total Sales</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-body">
+                <h3>Expenditure</h3>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>{{ inventory_added }}</h3>
+
+                                <p>Items Added To Inventory</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-inbox"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-blue-active" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>{{ inventory_used }}</h3>
+
+                                <p>Items used from Inventory</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-red" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>Rs. {{ inventory_expended|intcomma }}</h3>
+
+                                <p>Inventory Expended</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-red-active" style="overflow: hidden">
+                            <div class="inner">
+                                <h3>Rs. {{ expense_worth|intcomma }}</h3>
+
+                                <p>Monthly Expenses</p>
+                            </div>
+                            <div class="icon" style="top: 10px;">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                            {#                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>#}
+                        </div>
+                    </div>
+                    <!-- ./col -->
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-body">
+                <h3>Orders</h3>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                        <div class="box box-info">
+                            <div class="box-header">
+                                <div class="box-title">Today Orders: {{ orders|length }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <h3>Top Order</h3>
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h5 style="display: inline-block"><b>Order # {{ top_order.id }}</b></h5>
+                                <p class="text-muted">{{ top_order.created_at.date }}, {{ top_order.created_at.time }}</p>
+                                <h3 style="margin-top: -5px;">Table Number {{ top_order.order_table.number }}</h3>
+                                <h3 style="margin-top: 5px;">
+                                    <small>
+                                        Order Of:
+                                        <span id="order-status"><b>{{ top_order.waiter }}</b></span>
+                                    </small>
+                                </h3>
+                            </div>
+                            <div class="box-body">
+                                <h5 style="margin: 2px 0;"><b>Order Items:</b></h5>
+
+                                <ul class="nav nav-pills nav-stacked no-padding">
+                                    {% for i in top_order.orderitems_set.all %}
+                                        <li class="order-item" style="padding: 5px 5px;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td><img src="{{ i.item.category.image.url }}" alt="" width="15px">
+                                                    </td>
+                                                    <td>{{ i.item.name }}</td>
+                                                    <td><span class="text-danger">Rs. {{ i.item.price }}</span></td>
+                                                    <td><span
+                                                            class="badge bg-blue pull-right">{{ i.item_quantity }}</span>
+                                                    </td>
+                                                </tr>
+                                                {% if i.item_extra %}
+                                                    {% ifnotequal i.item_extra '' %}
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                {{ i.item_extra }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endifnotequal %}
+                                                {% endif %}
+                                            </table>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="box-footer">
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% ifnotequal top_order.discount 0 %}
+                                        <li class="order-item" style="padding: 5px;">
+                                            <p class="pull-left"><b>Total Bill</b></p>
+                                            <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                                Rs. {{ top_order.total_bill }}</h3>
+                                            <div class="clearfix"></div>
+                                        </li>
+
+                                        <li class="order-item">
+                                            <b>Discount</b>
+                                            <span class="pull-right text-danger">{{ top_order.discount }}%</span>
+                                        </li>
+                                    {% endifnotequal %}
+                                    {% if top_order.is_completed %}
+                                        <li class="order-item" style="padding: 5px;">
+                                            <p class="pull-left"><b>Grand Total</b></p>
+                                            <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                                Rs. {{ top_order.get_grand_total }}</h3>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <h3>Lowest Order</h3>
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h5 style="display: inline-block"><b>Order # {{ min_order.id }}</b></h5>
+                                <p class="text-muted">{{ min_order.created_at.date }}, {{ min_order.created_at.time }}</p>
+                                <h3 style="margin-top: -5px;">Table Number {{ min_order.order_table.number }}</h3>
+                                <h3 style="margin-top: 5px;">
+                                    <small>
+                                        Order Of:
+                                        <span id="order-status"><b>{{ min_order.waiter }}</b></span>
+                                    </small>
+                                </h3>
+                            </div>
+                            <div class="box-body">
+                                <h5 style="margin: 2px 0;"><b>Order Items:</b></h5>
+
+                                <ul class="nav nav-pills nav-stacked no-padding">
+                                    {% for i in min_order.orderitems_set.all %}
+                                        <li class="order-item" style="padding: 5px 5px;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td><img src="{{ i.item.category.image.url }}" alt="" width="15px">
+                                                    </td>
+                                                    <td>{{ i.item.name }}</td>
+                                                    <td><span class="text-danger">Rs. {{ i.item.price }}</span></td>
+                                                    <td><span
+                                                            class="badge bg-blue pull-right">{{ i.item_quantity }}</span>
+                                                    </td>
+                                                </tr>
+                                                {% if i.item_extra %}
+                                                    {% ifnotequal i.item_extra '' %}
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                {{ i.item_extra }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endifnotequal %}
+                                                {% endif %}
+                                            </table>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="box-footer">
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% ifnotequal min_order.discount 0 %}
+                                        <li class="order-item" style="padding: 5px;">
+                                            <p class="pull-left"><b>Total Bill</b></p>
+                                            <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                                Rs. {{ min_order.total_bill }}</h3>
+                                            <div class="clearfix"></div>
+                                        </li>
+
+                                        <li class="order-item">
+                                            <b>Discount</b>
+                                            <span class="pull-right text-danger">{{ min_order.discount }}%</span>
+                                        </li>
+                                    {% endifnotequal %}
+                                    {% if min_order.is_completed %}
+                                        <li class="order-item" style="padding: 5px;">
+                                            <p class="pull-left"><b>Grand Total</b></p>
+                                            <h3 class="pull-right" style="display: inline-block; margin: 0;">
+                                                Rs. {{ min_order.get_grand_total }}</h3>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <h3>Popular Item</h3>
+                        <div class="box-body">
+                            {% with most_popular_item as popular_item %}
+                                <div class="box box-success">
+                                    <div class="box-header with-border">
+                                        {#                                {{ most_popular_item }}#}
+                                        <h3 class="box-title"><b>{{ popular_item.name }}</b></h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {% if popular_item.image %}
+                                                    <img src="{{ popular_item.image.url }}" alt=""
+                                                         class="img-responsive">
+                                                {% elif popular_item.category.image %}
+                                                    <img src="{{ popular_item.category.image.url }}" alt=""
+                                                         class="img-responsive"
+                                                         style="margin: 0 auto; width: 120px;">
+                                                {% else %}
+                                                    <div>
+                                                        No Image Available
+                                                    </div>
+                                                    {#                                            <img src="logo_main.png" alt="" class="img-responsive">#}
+                                                {% endif %}
+
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                        <!-- /.row -->
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <li>
+                                                <b>Description</b>
+                                                <p>{{ popular_item.description }}</p>
+                                            </li>
+                                            <li>
+                                                <div class="row">
+                                                    <div class="col-xs-8">
+                                                        <p><b>Category</b></p>
+                                                        <p>{{ popular_item.category }}</p>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                <span class="pull-right" style="margin-top: 15px;"><img
+                                                        src="{{ popular_item.category.image.url }}" alt=""
+                                                        class="img-sm"></span>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                </div>
+
+
+                                            </li>
+                                            <li><b>Price</b><span
+                                                    class="pull-right text-red"><b>Rs. {{ popular_item.price }}</b></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /.footer -->
+                                </div>
+                                <!-- /.box -->
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h3>Reports</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h3>Orders</h3>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover" id="data-table1">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Table</th>
+                        <th>Total Items</th>
+                        <th>Placed At</th>
+                        <th>Ready At</th>
+                        <th>Served At</th>
+                        <th>Total Bill</th>
+                        <th>Discount</th>
+                        <th>Grand Total</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for obj in orders %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.order_table }}</td>
+                            <td>{{ obj.orderitems_set.all|length }}</td>
+                            <td>{{ obj.placed_at.time }}</td>
+                            <td>{{ obj.ready_at.time }}</td>
+                            <td>{{ obj.served_at.time }}</td>
+                            <td>Rs. {{ obj.total_bill }}</td>
+                            <td>{{ obj.discount }}%</td>
+                            <td>Rs. {{ obj.get_grand_total }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h3>Inventory In</h3>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover" id="data-table1">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Time</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for obj in inventory_in %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.name }}</td>
+                            <td>{{ obj.unit }}</td>
+                            <td>{{ obj.category }}</td>
+                            <td>{{ obj.price }}</td>
+                            <td>{{ obj.quantity }}</td>
+                            <td>{{ obj.get_grand_total }}</td>
+                            <td>{{ obj.created_at.time }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h3>Inventory Out</h3>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover" id="data-table1">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Issued To</th>
+                        <th>Time</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for obj in inventory_out %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.name }}</td>
+                            <td>{{ obj.unit }}</td>
+                            <td>{{ obj.category }}</td>
+                            <td>{{ obj.price }}</td>
+                            <td>{{ obj.quantity }}</td>
+                            <td>{{ obj.get_grand_total }}</td>
+                            <td>{{ obj.issued_to }}</td>
+                            <td>{{ obj.created_at.time }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">
+                    <h3>Expenses</h3>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover" id="data-table1">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Time</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for obj in expenses %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.name }}</td>
+                            <td>{{ obj.unit }}</td>
+                            <td>{{ obj.category }}</td>
+                            <td>{{ obj.price }}</td>
+                            <td>{{ obj.quantity }}</td>
+                            <td>{{ obj.get_grand_total }}</td>
+                            <td>{{ obj.created_at.time }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

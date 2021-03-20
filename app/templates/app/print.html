@@ -1,0 +1,165 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print Bill</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: gray;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-size: 14px;
+        }
+
+        .page {
+            width: 7.9cm;
+            /*            background: #ccc;*/
+            padding: 15px 10px;
+            border: 1px dotted #ccc;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            display: block;
+            margin: 0 auto 15px auto;
+        }
+
+        table {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        #btn-print {
+            position: fixed;
+            top: 30px;
+            left: 50px;
+            width: 100px;
+            padding: 10px;
+            border: none;
+            background: #0d6aad;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #btn-print:hover {
+            background: #00a7d0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                align-items: flex-start;
+            }
+
+            .page {
+                width: 7.9cm;
+                border: none;
+                padding: 0px;
+                background: white;
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            }
+
+            #btn-print {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body onload="window.print();">
+{#<body>#}
+{#<button onclick="window.history.back();" id="btn-print">Back</button>#}
+<a href="{% url 'order-completed-que' %}" id="btn-print">Back</a>
+<div class="page">
+    <div class="page-header">
+        <img src="{% static 'app/images/logo_print_no_address.png' %}" alt="" style="width: 80%;">
+        <p class="center" style="font-size: 11px; line-height: 0;">NTN: 5207528-2</p>
+        <p class="center" style="font-size: 11px; line-height: 0;">STRN: K5207528-2</p>
+        <p class="center" style="font-size: 11px; line-height: 0;">Awan plaza Phase II, Opp. Daewoo Terminal
+            Mandian,</p>
+        <p class="center" style="font-size: 11px; line-height: 7px; margin-bottom: 15px;"> Abbottabad, Ph:
+            0992-383828-9, 03065005234</p>
+        <table>
+            <tr>
+                <td class="left" style="font-size: 12px;">Dated: {{ order.created_at.date }}</td>
+                <td class="right" style="font-size: 12px;">Time: {{ order.created_at.time }}</td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <div class="page-body">
+        <table>
+            <tr>
+                <th class="left">Item</th>
+                <th class="center">Qty</th>
+                <th class="right">Price</th>
+                <th class="right">Total</th>
+            </tr>
+            {% for o in order.orderitems_set.all %}
+                <tr>
+                    <td class="left">{{ o.item.name }}</td>
+                    <td class="center">{{ o.item_quantity }}</td>
+                    <td class="right">Rs. {{ o.item.price }}</td>
+                    <td class="right">Rs. {{ o.get_grand_total }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <hr>
+    <div class="page-footer">
+
+            <table>
+                <tr>
+                    <td class="left">Total:</td>
+                    <td class="right">Rs. {{ order.total_bill }}/-</td>
+                </tr>
+                {% ifnotequal order.discount 0 %}
+                <tr>
+                    <td class="left">Discount:</td>
+                    <td class="right">{{ order.discount }}%</td>
+                </tr>
+                {% endifnotequal %}
+                <tr>
+                    <td class="left">GST:</td>
+                    <td class="right">{{ order.service_charges }}%</td>
+                </tr>
+            </table>
+            <hr>
+
+        <table>
+            <tr>
+                <td class="left">Grand Total:</td>
+                <td class="right"><b>Rs. {{ order.get_grand_total }}/-</b></td>
+            </tr>
+        </table>
+        <p class="center" style="font-size: 12px;">For home delivery call at <b>0306-5005234</b></p>
+        <p class="center" style="font-size: 12px; margin-top: 10px;"><em>"Each day has a Color, each day has an Aroma"</em></p>
+    </div>
+    <hr style="margin-top: 200px">
+</div>
+
+</body>
+</html>

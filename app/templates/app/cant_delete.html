@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Can't Delete{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        <a href="{% url 'item-list' %}">Items</a> &gt; Delete Item
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alert alert-danger">
+                    The item <b>{{ item }}</b> can not be deleted because it is contained in multiple orders.
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

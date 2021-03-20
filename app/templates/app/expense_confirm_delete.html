@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} New Category {% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        <a href="{% url 'expense-list' %}">Expense</a> &gt; Delete Expense
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- form start -->
+                <form method="post">{% csrf_token %}
+                    <p>Are you sure you want to delete "{{ object }}"?</p>
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+            </div>
+
+        </div>
+
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

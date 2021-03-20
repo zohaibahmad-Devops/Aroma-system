@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Menu {% endblock %}
+{% block link-menu %}active{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        Menu
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+        {% if table_list %}
+            {% if category_list %}
+                <!-- Categories -->
+                <div class="row">
+                    <div class="col-md-8 col-lg-8">
+                        <div class="row" id="categories">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    {% for category in category_list %}
+                                        <div class="col-xs-6 col-md-3 col-lg-4">
+                                            <div class="box box-info box-clickable"
+                                                 onclick="showItemsOf('category_{{ category.id }}')">
+
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            {% if category.image %}
+                                                                <img src="{{ category.image.url }}" alt=""
+                                                                     class="img-responsive"
+                                                                     style="width: 50px; margin: 0 auto;">
+                                                            {% else %}
+                                                                <div class="no-image-available">
+                                                                    No Image Available
+                                                                </div>
+                                                            {% endif %}
+
+                                                        </div>
+                                                        <!-- /.col -->
+                                                    </div>
+                                                    <!-- /.row -->
+                                                </div>
+                                                <!-- /.box-body -->
+                                                <div class="box-footer text-center">
+                                                    <h3 style="margin: 0;">
+                                                        {{ category.name }}
+
+                                                    </h3>
+                                                    <p class="text-muted">
+                                                        <small>
+                                                            {% if category.item_set.all|length > 0 %}
+                                                                Items in this category:
+                                                                <span class="badge bg-{% if category.item_set.all|length %}blue{% else %}red{% endif %}">
+                                                        {{ category.item_set.all|length }}
+                                                    </span>
+                                                            {% else %}
+                                                                No item in this category
+                                                            {% endif %}
+                                                        </small>
+                                                    </p>
+
+                                                </div>
+                                                <!-- /.footer -->
+                                            </div>
+                                            <!-- /.box -->
+                                        </div>
+
+                                        {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+                                            </div>
+                                            <div class="row">
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Items of Categories -->
+                            <div class="col-md-12">
+                                {% for category in category_list %}
+                                    <div id="category_{{ category.id }}" class="category_items">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h3 style="display: flex;">
+                                                    <a href="#" onclick="showCategories()" style="display: block;">
+                                                        Categories &gt;
+                                                    </a>
+                                                    <p>&nbsp;{{ category.name }} </p>
+                                                    {% if category.image %}
+                                                    <img src="{{ category.image.url }}" alt="" class="img-sm"
+                                                         style="display: block; margin-left: 10px;">
+                                                         {% endif %}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            {% for item in category.item_set.all %}
+                                                <div class="col-xs-3">
+                                                    <div class="box box-info box-clickable"
+                                                         onclick="addItemToOrder({{ item.id }})">
+
+                                                        <div class="box-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    {% if item.image %}
+                                                                        <img src="{{ item.image.url }}" alt=""
+                                                                             class="img-responsive"
+                                                                             style="width: 120px; margin: 0 auto;">
+                                                                    {% else %}
+                                                                        <div class="no-image-available">
+                                                                            No Image Available
+                                                                        </div>
+                                                                    {% endif %}
+
+                                                                </div>
+                                                                <!-- /.col -->
+                                                            </div>
+                                                            <!-- /.row -->
+                                                        </div>
+                                                        <!-- /.box-body -->
+                                                        <div class="box-footer text-center">
+                                                            <h4 style="margin: 0;">
+                                                                {{ item.name }}
+                                                            </h4>
+                                                            <p class="text-danger">
+                                                                <b>Rs. {{ item.price }}</b>
+                                                            </p>
+
+                                                        </div>
+                                                        <!-- /.footer -->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+
+                                                {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+                                                    </div>
+                                                    <div class="row">
+                                                {% endif %}
+
+                                            {% empty %}
+                                                <div class="box box-solid">
+                                                    <div class="box-body">
+                                                        <div class="text-center">
+                                                            <h3 class="text-gray">No Item Found</h3>
+                                                            <p>Kindly first add item in this category. <a
+                                                                    href="{% url 'item-new' %}"
+                                                                    class="btn btn-primary">Add Item
+                                                                Now</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                            </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <form action="{% url 'order-new' %}" method="post">
+                            {% csrf_token %}
+                            <div class="box box-solid order-box">
+                                <div class="box-header with-border">
+                                    <h3 style="display: inline-block;">New Order</h3>
+                                    <h4 class="pull-right" style="margin-top: 20px;">
+                                        Total Items: <span class="badge bg-green" id="item-count">0</span>
+                                    </h4>
+                                    <div class="clearfix"></div>
+                                    <p class="text-info">Click on item if you want to remove it.</p>
+                                </div>
+                                <div class="box-body order-body no-padding">
+                                    <div class="row" style="padding: 0px 15px;">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label for="">Order By:</label>
+                                                <input type="text" class="form-control" name="waiter">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding: 10px 15px;">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label for="">Select Table:</label>
+                                                <select name="menu-table" id="" class="form-control">
+                                                    {% for t in table_list %}
+                                                        <option value="{{ t.id }}">
+                                                            {% if t.name %}
+                                                                {{ t.name }}
+                                                            {% else %}
+                                                                Table Number {{ t.number }}
+                                                            {% endif %}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="no-order-container">
+                                        <div class="no-order">
+                                            No item in order currently
+                                        </div>
+                                    </div>
+
+
+                                    <ul class="nav nav-stacked" id="order-list">
+
+                                    </ul>
+
+                                </div>
+                                <div class="box-footer">
+                                    {#                                <div class="form-group">#}
+                                    {#                                    <label for="">Discount (%)</label>#}
+                                    {#                                    <input type="number" name="discount" value="0">#}
+                                    {#                                    <p>#}
+                                    {#                                        <small>Kindly only provide figure for discount assuming it as percentage.#}
+                                    {#                                        </small>#}
+                                    {#                                    </p>#}
+                                    {#                                </div>#}
+                                    <input type="submit" class="btn btn-primary" id="btn-create" value="Place Order"/>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+
+
+            {% else %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <div class="text-center">
+                                    <h3 class="text-gray">No Category Found</h3>
+                                    <p>Kindly first add category for categorys. <a href="{% url 'item-category-new' %}"
+                                                                                   class="btn btn-primary">Add category
+                                        now</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="text-center">
+                                <h3 class="text-gray">No Table Found</h3>
+                                <p>Kindly first add table for menu. <a href="{% url 'table-new' %}"
+                                                                       class="btn btn-primary">Add Table
+                                    now</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </section>
+    <!-- /.content -->
+
+    <script src="{% static 'app/bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+    <script>
+        $('document').ready(function () {
+            $('.category_items').hide();
+            $('#order-list').hide();
+            $('#btn-create').hide();
+
+        });
+
+        function showCategories() {
+            $('#categories').show();
+            $('.category_items').hide();
+        }
+
+        function showItemsOf(category) {
+            $('#categories').hide();
+            var category_id = '#' + category;
+            $(category_id).show();
+        }
+
+        var isOrderContainsItem = false;
+
+        function addItemToOrder(id) {
+            var url = '/ajax/item/add-to-order';
+            $.ajax({
+                url: url,
+                data: {'id': id},
+                success: function (response) {
+
+                    if (!isOrderContainsItem) {
+                        $('.no-order-container').hide();
+                        $('#order-list').show();
+                        $('#btn-create').show()
+                        isOrderContainsItem = true;
+                    }
+
+                    $('#order-list').append(response);
+
+                    var itemInList = $('#order-list li').length;
+                    $('#item-count').text(itemInList);
+                }
+            });
+        }
+
+        function removeItemFromOrder(item) {
+            // if no item left in order
+            // hide order-list and show no-order
+            $(item).parent().parent().parent().remove();
+
+            var itemInList = $('#order-list li').length;
+            $('#item-count').text(itemInList);
+
+            if (itemInList == 0) {
+                $('.no-order-container').show();
+                $('#order-list').hide();
+                $('#btn-create').hide();
+                isOrderContainsItem = false;
+            }
+
+        }
+    </script>
+
+
+{% endblock %}

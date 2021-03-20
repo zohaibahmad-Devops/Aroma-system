@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Daily Report{% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        Daily Report
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+        {% now 'j' as today %}
+
+        <div class="box box-solid">
+            <div class="box-header">
+                <h2 class="box-title">Select the category:</h2>
+            </div>
+            <div class="box-body">
+                <ul>
+                    <li><a href="{% url 'report-daily-order' today %}" class="btn btn-link">Orders</a></li>
+                    <li><a href="" class="btn btn-link">Items</a></li>
+                    <li><a href="" class="btn btn-link">Inventory</a></li>
+                    <li><a href="" class="btn btn-link">Expenses</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}

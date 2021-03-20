@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} New Inventory Quantity {% endblock %}
+{% block content %}
+
+
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1>
+                        <a href="{% url 'inventory-list' %}">Inventory</a> &gt;
+                        Issue Item <b>{{ inventory }}</b>
+                    </h1>
+                    <p class="text-muted">
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim, neque.</small>
+                    </p>
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            You are about to issue <b>{{ inventory }}</b>
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- form start -->
+                        <form action="{% url 'inventory-issue' inventory.id %}" method="post">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="">Name of Person</label>
+                                <input type="text" class="form-control" name="issued_to">
+                                <span class="help-block">This is help text to describe you how to do</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Quantity</label>
+                                <input type="number" class="form-control" name="quantity">
+                                <span class="help-block">This is help text to describe you how to do</span>
+                            </div>
+                            <input type="submit" value="Issue {{ inventory }}" class="btn btn-warning">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <!-- /.content -->
+
+
+{% endblock %}
